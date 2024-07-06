@@ -11,7 +11,7 @@ Download [SAM checkpoint](https://dl.fbaipublicfiles.com/segment_anything/sam_vi
 
 ## Example
 
-1. Download dataset from https://challenge.isic-archive.com/data/. Then put it in "./data/eye". The folder should be like:
+1. The dataset is placed in "./data/eye", and the file structure is:
 
 EYE/
 
