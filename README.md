@@ -11,7 +11,7 @@ Download [SAM checkpoint](https://dl.fbaipublicfiles.com/segment_anything/sam_vi
 
 ## Example
 
-1. The dataset is placed in "./data/eye", and the file structure is:
+1. The dataset is placed in "./data/eye", and the file structure of dataset is:
 
 EYE/
 
