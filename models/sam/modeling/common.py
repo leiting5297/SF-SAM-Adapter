@@ -17,33 +17,10 @@ class SAAdapter(nn.Module):
     def __init__(self, dim, h, w, mlp_ratio=0.25, act_layer=nn.GELU, skip_connect=True):
         super().__init__()
         self.skip_connect = skip_connect
-
-        self.multihead_attention = nn.MultiheadAttention(768, 4)
-
         self.norm1 = nn.LayerNorm(768)
 
         self.linear1 = nn.Linear(768, 256)
         self.linear2 = nn.Linear(256, 768)
-
-        self.norm2 = nn.LayerNorm(768)
-
-        self.conv0 = nn.Conv2d(dim, dim, 5, padding=2, groups=dim)
-        self.conv0_1 = nn.Conv2d(dim, dim, (1, 7), padding=(0, 3), groups=dim)
-        self.conv0_2 = nn.Conv2d(dim, dim, (7, 1), padding=(3, 0), groups=dim)
-
-        self.conv1_1 = nn.Conv2d(dim, dim, (1, 11), padding=(0, 5), groups=dim)
-        self.conv1_2 = nn.Conv2d(dim, dim, (11, 1), padding=(5, 0), groups=dim)
-
-        self.conv2_1 = nn.Conv2d(
-            dim, dim, (1, 21), padding=(0, 10), groups=dim)
-        self.conv2_2 = nn.Conv2d(
-            dim, dim, (21, 1), padding=(10, 0), groups=dim)
-        self.conv3 = nn.Conv2d(dim, dim, 1)
-
-        self.Myronghe1 = nn.Conv2d(in_channels=dim * 4, out_channels=dim, kernel_size=1)
-
-        self.Myronghe = nn.Conv2d(in_channels=dim * 2, out_channels=dim, kernel_size=1)
-
         self.l1 = nn.Linear(64, 16)
         self.l2 = nn.Linear(16, 64)
 
@@ -82,44 +59,22 @@ class FAAdapter(nn.Module):
     def __init__(self, dim, h, w, mlp_ratio=0.25, act_layer=nn.GELU, skip_connect=True, pe=None):
         super().__init__()
         self.skip_connect = skip_connect
-        # Multi-head self-attention layer
-        self.multihead_attention = nn.MultiheadAttention(768, 4)
 
         self.norm1 = nn.LayerNorm(768)
 
         self.linear1 = nn.Linear(768, 256)
         self.linear2 = nn.Linear(256, 768)
 
-        self.norm2 = nn.LayerNorm(768)
-
-        self.conv0 = nn.Conv2d(dim, dim, 5, padding=2, groups=dim)
-        self.conv0_1 = nn.Conv2d(dim, dim, (1, 7), padding=(0, 3), groups=dim)
-        self.conv0_2 = nn.Conv2d(dim, dim, (7, 1), padding=(3, 0), groups=dim)
-
-        self.conv1_1 = nn.Conv2d(dim, dim, (1, 11), padding=(0, 5), groups=dim)
-        self.conv1_2 = nn.Conv2d(dim, dim, (11, 1), padding=(5, 0), groups=dim)
-
-        self.conv2_1 = nn.Conv2d(
-            dim, dim, (1, 21), padding=(0, 10), groups=dim)
-        self.conv2_2 = nn.Conv2d(
-            dim, dim, (21, 1), padding=(10, 0), groups=dim)
-        self.conv3 = nn.Conv2d(dim, dim, 1)
-
-        self.Myronghe1 = nn.Conv2d(in_channels=dim * 4, out_channels=dim, kernel_size=1)
-
-        self.Myronghe = nn.Conv2d(in_channels=dim * 2, out_channels=dim, kernel_size=1)
-
-        self.l1 = nn.Linear(64, 16)
-        self.l2 = nn.Linear(16, 64)
-
-        self.pe = pe
-
         self.MyFF = MyParser()
 
     def forward(self, x, pe):
         res = x
+        
+        x=self.norm1(x)
+        
         x = rearrange(x, 'b h w c -> b c w h').contiguous()
-
+        
+        
         x = self.MyFF(x)
 
         x = rearrange(x, 'b c w h -> b h w c').contiguous()
